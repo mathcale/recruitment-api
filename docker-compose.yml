@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  postgresql:
+    image: postgres:alpine
+    container_name: recruitment-api-postgresql
+    ports:
+      - '5432:5432'
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+volumes:
+  pg-data:
