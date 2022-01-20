@@ -6,9 +6,12 @@ import {
 } from '@nestjs/common';
 
 import { CreateUserInput } from '../users/dto/create-user.input';
+import { JwtPayload } from './jwt.strategy';
 import { PostgresErrorCode } from '../users/users.repository';
 import { RegisterCandidateInput } from './dto/register-candidate.input';
 import { Role } from '../users/enums/role.enum';
+import { SignInInput } from './dto/sign-in.input';
+import { User } from 'src/users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -16,6 +19,10 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(private readonly usersService: UsersService) {}
+
+  async signIn(signInInput: SignInInput): Promise<any | never> {
+    return;
+  }
 
   public async registerCandidate(
     registerCandidateInput: RegisterCandidateInput,
@@ -42,5 +49,9 @@ export class AuthService {
       this.logger.error(err);
       throw new InternalServerErrorException();
     }
+  }
+
+  async validateUser(payload: JwtPayload): Promise<User> {
+    return;
   }
 }
