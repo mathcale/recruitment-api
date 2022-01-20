@@ -2,9 +2,9 @@ import { Body, Controller, Get, Logger, Post, Req, UseGuards } from '@nestjs/com
 import { AuthGuard } from '@nestjs/passport';
 
 import { AuthService } from './auth.service';
-import { JwtPayload } from './jwt.strategy';
 import { RegisterCandidateInput } from './dto/register-candidate.input';
 import { SignInInput } from './dto/sign-in.input';
+import { User } from '../users/entities/user.entity';
 
 @Controller('accounts')
 export class AuthController {
@@ -13,11 +13,11 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/signin')
-  public async signIn(@Body() signInInput: SignInInput): Promise<any | never> {
+  public async signIn(@Body() signInInput: SignInInput) {
     return await this.authService.signIn(signInInput);
   }
 
-  @Post('/create-account')
+  @Post('/signup')
   registerCandidate(@Body() registerCandidateInput: RegisterCandidateInput) {
     this.logger.log('Starting new candidate registration flow...');
 
@@ -26,7 +26,7 @@ export class AuthController {
 
   @Get('/me')
   @UseGuards(AuthGuard())
-  public async testAuth(@Req() req: any): Promise<JwtPayload> {
+  public async getCurrentUser(@Req() req: any): Promise<Partial<User>> {
     return req.user;
   }
 }

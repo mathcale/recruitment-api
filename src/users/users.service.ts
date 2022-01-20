@@ -11,7 +11,7 @@ export class UsersService {
 
   constructor(@InjectRepository(UsersRepository) private usersRepository: UsersRepository) {}
 
-  async findByEmail(email: string): Promise<any | never> {
+  async findByEmail(email: string): Promise<User | never> {
     this.logger.log(`Fetching user with email [${email}]...`);
 
     const foundUser = await this.usersRepository.findOne({ email });
