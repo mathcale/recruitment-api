@@ -8,6 +8,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { instanceToPlain } from 'class-transformer';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const escape = require('lodash.escape');
 
 import { CreateUserInput } from '../users/dto/create-user.input';
 import { JwtPayload } from './dto/jwt-payload.output';
@@ -62,8 +64,8 @@ export class AuthService {
 
       // FIXME: refactor to mapper class
       const createUserInput: CreateUserInput = new CreateUserInput();
-      createUserInput.name = registerCandidateInput.name;
-      createUserInput.email = registerCandidateInput.email;
+      createUserInput.name = escape(registerCandidateInput.name);
+      createUserInput.email = escape(registerCandidateInput.email);
       createUserInput.password = registerCandidateInput.password;
       createUserInput.role = Role.CANDIDATE;
 
