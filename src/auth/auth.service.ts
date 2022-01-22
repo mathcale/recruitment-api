@@ -8,6 +8,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { instanceToPlain } from 'class-transformer';
+import { Builder } from 'builder-pattern';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const escape = require('lodash.escape');
 
@@ -42,12 +43,12 @@ export class AuthService {
 
     this.logger.log('Credentials successfully validated! Creating token...');
 
-    // FIXME: convert to mapper
-    const payload = new JwtPayload();
-    payload.sub = user.externalId;
-    payload.name = user.name;
-    payload.email = user.email;
-    payload.role = user.role;
+    const payload = Builder(JwtPayload)
+      .sub(user.externalId)
+      .name(user.name)
+      .email(user.email)
+      .role(user.role)
+      .build();
 
     const token = this.jwtService.sign(instanceToPlain(payload));
 
@@ -62,12 +63,12 @@ export class AuthService {
     try {
       this.logger.log('Registering new user of role CANDIDATE...');
 
-      // FIXME: refactor to mapper class
-      const createUserInput: CreateUserInput = new CreateUserInput();
-      createUserInput.name = escape(registerCandidateInput.name);
-      createUserInput.email = escape(registerCandidateInput.email);
-      createUserInput.password = registerCandidateInput.password;
-      createUserInput.role = Role.CANDIDATE;
+      const createUserInput = Builder(CreateUserInput)
+        .name(escape(registerCandidateInput.name))
+        .email(escape(registerCandidateInput.email))
+        .password(registerCandidateInput.password)
+        .role(Role.CANDIDATE)
+        .build();
 
       await this.usersService.create(createUserInput);
 
