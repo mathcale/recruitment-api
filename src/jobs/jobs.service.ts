@@ -14,6 +14,7 @@ import { CreateJobInput } from './dto/create-job.input';
 import { FindAllJobsOutput } from './dto/find-all-jobs.output';
 import { FindAllJobsParams } from './dto/find-all-jobs.params';
 import { Job } from './entities/job.entity';
+import { JobPublicationStatus } from './enums/job-publication-status.enum';
 import { JobsRepository } from './jobs.repository';
 import { PostgresErrorCode } from '../users/users.repository';
 
@@ -92,6 +93,19 @@ export class JobsService {
   }
 
   async publishJob(externalId: string): Promise<Job | never> {
-    return;
+    const job = await this.findOne(externalId);
+
+    if (job.status === JobPublicationStatus.PUBLISHED) {
+      throw new ConflictException('Vaga já publicada!');
+    }
+
+    this.logger.log(`Publishing job [${externalId}]...`);
+
+    job.status = JobPublicationStatus.PUBLISHED;
+    const updatedJob = await this.jobsRepository.save(job);
+
+    this.logger.log('Job successfully published!');
+
+    return updatedJob;
   }
 }
