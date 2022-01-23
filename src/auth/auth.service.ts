@@ -88,7 +88,7 @@ export class AuthService {
     this.logger.debug('Validating current user...');
 
     return this.usersService.findByEmail(payload.email).catch(() => {
-      this.logger.error(`Invalid user detected! Token payload:`, payload);
+      this.logger.error(`Invalid user detected! Token payload: [${JSON.stringify(payload)}]`);
 
       throw new UnauthorizedException();
     });
