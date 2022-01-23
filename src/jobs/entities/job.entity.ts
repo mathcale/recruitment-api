@@ -10,6 +10,8 @@ import {
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
+import { JobPublicationStatus } from '../enums/job-publication-status.enum';
+
 @Entity()
 export class Job {
   @PrimaryGeneratedColumn()
@@ -21,9 +23,12 @@ export class Job {
   @Index()
   externalId: string;
 
-  @Column()
+  @Column({ unique: true })
   @Index()
   name: string;
+
+  @Column({ default: JobPublicationStatus.UNPUBLISHED })
+  status: JobPublicationStatus;
 
   @CreateDateColumn()
   createdAt: string;

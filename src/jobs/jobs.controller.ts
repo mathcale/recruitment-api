@@ -6,7 +6,6 @@ import { JobsService } from './jobs.service';
 import { Role } from '../users/enums/role.enum';
 import { Roles } from '../users/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { UpdateJobInput } from './dto/update-job.input';
 
 @Controller('jobs')
 export class JobsController {
@@ -25,14 +24,14 @@ export class JobsController {
   @Post()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.RECRUITER)
-  create(@Body() createJobDto: CreateJobInput) {
-    return this.jobsService.create(createJobDto);
+  create(@Body() createJobInput: CreateJobInput) {
+    return this.jobsService.create(createJobInput);
   }
 
-  @Patch(':id')
+  @Patch('publish-job/:externalId')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.RECRUITER)
-  update(@Param('id') id: string, @Body() updateJobDto: UpdateJobInput) {
-    return this.jobsService.update(+id, updateJobDto);
+  publishJob(@Param('externalId') externalId: string) {
+    return this.jobsService.publishJob(externalId);
   }
 }
