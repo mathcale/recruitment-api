@@ -5,12 +5,15 @@ import {
   Entity,
   Generated,
   Index,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
 import { JobPublicationStatus } from '../enums/job-publication-status.enum';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Job {
@@ -29,6 +32,10 @@ export class Job {
 
   @Column({ default: JobPublicationStatus.UNPUBLISHED })
   status: JobPublicationStatus;
+
+  @ManyToMany(() => User, (user) => user.jobs)
+  @JoinTable({ name: 'job_applications' })
+  users: User[];
 
   @CreateDateColumn()
   createdAt: string;

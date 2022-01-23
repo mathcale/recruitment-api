@@ -6,10 +6,12 @@ import {
   Entity,
   Generated,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+import { Job } from '../../jobs/entities/job.entity';
 import { Role } from '../enums/role.enum';
 
 @Entity()
@@ -37,6 +39,9 @@ export class User {
 
   @Column()
   role: Role;
+
+  @OneToMany(() => Job, (job) => job.users)
+  jobs: Promise<Job[]>;
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   createdAt: string;

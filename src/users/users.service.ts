@@ -26,6 +26,21 @@ export class UsersService {
     return foundUser;
   }
 
+  async findByExternalId(externalId: string): Promise<User | never> {
+    this.logger.log(`Fetching user with externalId [${externalId}]...`);
+
+    const foundUser = await this.usersRepository.findOne({ externalId });
+
+    if (!foundUser) {
+      this.logger.error(`User with externalId [${externalId}] not found!`);
+      throw new NotFoundException();
+    }
+
+    this.logger.log('User found, returning it...');
+
+    return foundUser;
+  }
+
   async create(createUserInput: CreateUserInput): Promise<User | never> {
     return this.usersRepository.createUser(createUserInput);
   }

@@ -10,6 +10,7 @@ import { FindConditions, Like } from 'typeorm';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const escape = require('lodash.escape');
 
+import { ApplyToJobInput } from './dto/apply-to-job.input';
 import { CreateJobInput } from './dto/create-job.input';
 import { FindAllJobsOutput } from './dto/find-all-jobs.output';
 import { FindAllJobsParams } from './dto/find-all-jobs.params';
@@ -17,12 +18,16 @@ import { Job } from './entities/job.entity';
 import { JobPublicationStatus } from './enums/job-publication-status.enum';
 import { JobsRepository } from './jobs.repository';
 import { PostgresErrorCode } from '../users/users.repository';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class JobsService {
   private readonly logger = new Logger(JobsService.name);
 
-  constructor(@InjectRepository(Job) private readonly jobsRepository: JobsRepository) {}
+  constructor(
+    @InjectRepository(Job) private readonly jobsRepository: JobsRepository,
+    private readonly usersService: UsersService,
+  ) {}
 
   async findAll({ page, pageSize, name }: FindAllJobsParams): Promise<FindAllJobsOutput> {
     this.logger.log(
@@ -53,10 +58,13 @@ export class JobsService {
     };
   }
 
-  async findOne(externalId: string): Promise<Job | never> {
+  async findOne(externalId: string, withApplications: boolean = false): Promise<Job | never> {
     this.logger.log(`Fetching job [${externalId}]...`);
 
-    const foundJob = await this.jobsRepository.findOne({ externalId });
+    const foundJob = await this.jobsRepository.findOne(
+      { externalId },
+      withApplications && { relations: ['users'] },
+    );
 
     if (!foundJob) {
       this.logger.warn(`Job [${externalId}] not found!`);
@@ -107,5 +115,33 @@ export class JobsService {
     this.logger.log('Job successfully published!');
 
     return updatedJob;
+  }
+
+  async applyToJob(jobExternalId: string, applyToJobInput: ApplyToJobInput): Promise<void | never> {
+    const job = await this.findOne(jobExternalId, true);
+
+    if (job.status !== JobPublicationStatus.PUBLISHED) {
+      throw new ConflictException(
+        'A vaga precisa estar publicada para aceitar aplicações de candidatos',
+      );
+    }
+
+    // FIXME: use query builder to check if user already applied to this job
+    if (job.users.find((applicant) => applicant.externalId === applyToJobInput.userExternalId)) {
+      this.logger.error(
+        `Candidade [${applyToJobInput.userExternalId}] already applied to job [${jobExternalId}]`,
+      );
+
+      throw new ConflictException('Candidato já cadastrado na vaga');
+    }
+
+    const user = await this.usersService.findByExternalId(applyToJobInput.userExternalId);
+    job.users.push(user);
+
+    this.logger.log('Saving relation between Job and User...');
+
+    await this.jobsRepository.save(job);
+
+    this.logger.log('Relation successfully saved!');
   }
 }

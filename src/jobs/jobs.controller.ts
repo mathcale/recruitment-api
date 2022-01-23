@@ -9,6 +9,7 @@ import {
   Query,
   UsePipes,
   ValidationPipe,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -18,6 +19,7 @@ import { JobsService } from './jobs.service';
 import { Role } from '../users/enums/role.enum';
 import { Roles } from '../users/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { ApplyToJobInput } from './dto/apply-to-job.input';
 
 @Controller('jobs')
 export class JobsController {
@@ -48,5 +50,13 @@ export class JobsController {
   @Roles(Role.RECRUITER)
   publishJob(@Param('externalId') externalId: string) {
     return this.jobsService.publishJob(externalId);
+  }
+
+  @Post('apply/:externalId')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.CANDIDATE)
+  applyToJob(@Param('externalId') jobExternalId: string, @Body() applyToJobInput: ApplyToJobInput) {
+    return this.jobsService.applyToJob(jobExternalId, applyToJobInput);
   }
 }
