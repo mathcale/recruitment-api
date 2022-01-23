@@ -5,10 +5,13 @@ import {
   Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FindConditions, Like } from 'typeorm';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const escape = require('lodash.escape');
 
 import { CreateJobInput } from './dto/create-job.input';
+import { FindAllJobsOutput } from './dto/find-all-jobs.output';
+import { FindAllJobsParams } from './dto/find-all-jobs.params';
 import { Job } from './entities/job.entity';
 import { JobsRepository } from './jobs.repository';
 import { PostgresErrorCode } from '../users/users.repository';
@@ -19,8 +22,33 @@ export class JobsService {
 
   constructor(@InjectRepository(Job) private readonly jobsRepository: JobsRepository) {}
 
-  findAll() {
-    return `This action returns all jobs`;
+  async findAll({ page, pageSize, name }: FindAllJobsParams): Promise<FindAllJobsOutput> {
+    this.logger.log(
+      `Starting find all jobs flow, page: [${page}], pageSize: [${pageSize}], name: [${name}]`,
+    );
+
+    const where: FindConditions<Job> = {};
+
+    if (name) {
+      where.name = Like(`%${escape(name)}%`);
+    }
+
+    const [result, total] = await this.jobsRepository.findAndCount({
+      take: pageSize,
+      skip: (page - 1) * pageSize,
+      where,
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    this.logger.log(`Fetched jobs, found [${total}]`);
+
+    return {
+      count: total,
+      pageSize,
+      data: result,
+    };
   }
 
   findOne(id: number) {
