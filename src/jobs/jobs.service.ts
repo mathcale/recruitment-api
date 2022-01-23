@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindConditions, Like } from 'typeorm';
@@ -51,8 +52,20 @@ export class JobsService {
     };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} job`;
+  async findOne(externalId: string): Promise<Job | never> {
+    this.logger.log(`Fetching job [${externalId}]...`);
+
+    const foundJob = await this.jobsRepository.findOne({ externalId });
+
+    if (!foundJob) {
+      this.logger.warn(`Job [${externalId}] not found!`);
+
+      throw new NotFoundException();
+    }
+
+    this.logger.log(`Found job, returning it...`);
+
+    return foundJob;
   }
 
   async create(createJobInput: CreateJobInput): Promise<Job | never> {

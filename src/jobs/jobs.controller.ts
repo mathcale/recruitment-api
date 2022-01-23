@@ -23,7 +23,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
-  @Get()
+  @Get('list-all-jobs')
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.RECRUITER)
@@ -31,9 +31,9 @@ export class JobsController {
     return this.jobsService.findAll(findAllJobsParams);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.jobsService.findOne(+id);
+  @Get(':externalId')
+  findOne(@Param('externalId') externalId: string) {
+    return this.jobsService.findOne(externalId);
   }
 
   @Post()
