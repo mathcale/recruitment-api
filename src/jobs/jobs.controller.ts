@@ -49,7 +49,7 @@ export class JobsController {
     return this.jobsService.findApplications(externalId, page, pageSize);
   }
 
-  @Post()
+  @Post('create-job')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.RECRUITER)
   create(@Body() createJobInput: CreateJobInput) {

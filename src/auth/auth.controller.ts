@@ -17,7 +17,7 @@ export class AuthController {
     return await this.authService.signIn(signInInput);
   }
 
-  @Post('/signup')
+  @Post('/create-account')
   registerCandidate(@Body() registerCandidateInput: RegisterCandidateInput) {
     this.logger.log('Starting new candidate registration flow...');
 
