@@ -13,15 +13,15 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
+import { ApplyToJobInput } from './dto/apply-to-job.input';
 import { CreateJobInput } from './dto/create-job.input';
 import { FindAllJobsParams } from './dto/find-all-jobs.params';
 import { JobsService } from './jobs.service';
 import { Role } from '../users/enums/role.enum';
 import { Roles } from '../users/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { ApplyToJobInput } from './dto/apply-to-job.input';
 
-@Controller('jobs')
+@Controller({ path: 'jobs', version: '1' })
 export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 

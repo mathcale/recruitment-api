@@ -6,7 +6,7 @@ import { RegisterCandidateInput } from './dto/register-candidate.input';
 import { SignInInput } from './dto/sign-in.input';
 import { User } from '../users/entities/user.entity';
 
-@Controller('accounts')
+@Controller({ path: 'accounts', version: '1' })
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 

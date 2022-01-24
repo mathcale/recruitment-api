@@ -51,6 +51,6 @@ $ yarn test
 ## Melhorias
 
 - [ ] Documentação dos endpoints com Swagger/OpenAPI;
-- [ ] Versionamento dos endpoints;
+- [x] Versionamento dos endpoints;
 - [ ] Acertar tipagem/DTO de alguns endpoints;
 - [ ] Adicionar Github Action para checagem dos testes à cada novo commit;
