@@ -41,6 +41,10 @@ export class UsersService {
     return foundUser;
   }
 
+  async findApplications(jobExternalId: string, page: number = 1, pageSize: number = 10) {
+    return this.usersRepository.findApplications(jobExternalId, page, pageSize);
+  }
+
   async create(createUserInput: CreateUserInput): Promise<User | never> {
     return this.usersRepository.createUser(createUserInput);
   }

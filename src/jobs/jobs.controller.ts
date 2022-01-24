@@ -38,6 +38,17 @@ export class JobsController {
     return this.jobsService.findOne(externalId);
   }
 
+  @Get('view-applications/:externalId')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.INTERVIEWER)
+  findApplications(
+    @Param('externalId') externalId: string,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.jobsService.findApplications(externalId, page, pageSize);
+  }
+
   @Post()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.RECRUITER)

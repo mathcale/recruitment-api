@@ -77,6 +77,14 @@ export class JobsService {
     return foundJob;
   }
 
+  async findApplications(
+    externalId: string,
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<any> {
+    return this.usersService.findApplications(externalId, page, pageSize);
+  }
+
   async create(createJobInput: CreateJobInput): Promise<Job | never> {
     try {
       const newJob = this.jobsRepository.create(createJobInput);
