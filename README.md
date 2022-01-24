@@ -23,7 +23,13 @@ $ yarn
 $ docker-compose up -d
 ```
 
-## Executando
+## Ao vivo
+
+A aplicação está deployada na Digital Ocean através do serviço App Platform e o banco de dados está no serviço [Supabase](https://supabase.io/).
+
+- Endereço da aplicação: [https://recruitment-api-tiblj.ondigitalocean.app](https://recruitment-api-tiblj.ondigitalocean.app)
+
+## Executando localment
 
 Para interagir com os endpoints disponíveis, utilize a collection disponível em `docs/collections/insomnia-recruitment-api.json` através do programa [Insomnia](https://insomnia.rest/products/insomnia).
 
