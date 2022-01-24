@@ -2,7 +2,10 @@
 <p align="center">
   <h1 align="center">Recruitment API</h1>
   <p align="center">API para gestão de vagas</p>
-  <p align="center"><a href="https://insomnia.rest/run/?label=Recruitment%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fmathcale%2Frecruitment-api%2Fmain%2Fdocs%2Fcollections%2Finsomnia-recruitment-api.json" target="_blank"><img src="https://insomnia.rest/images/run.svg" alt="Run in Insomnia"></a></p>
+  <p align="center">
+    <a href="https://github.com/mathcale/recruitment-api/actions/workflows/tests.yml"><img src="https://github.com/mathcale/recruitment-api/actions/workflows/tests.yml/badge.svg" alt="Github Actions"></a>
+    <a href="https://insomnia.rest/run/?label=Recruitment%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fmathcale%2Frecruitment-api%2Fmain%2Fdocs%2Fcollections%2Finsomnia-recruitment-api.json" target="_blank"><img src="https://insomnia.rest/images/run.svg" alt="Run in Insomnia"></a>
+  </p>
 </p>
 
 ## Tecnologias
@@ -53,4 +56,4 @@ $ yarn test
 - [ ] Documentação dos endpoints com Swagger/OpenAPI;
 - [x] Versionamento dos endpoints;
 - [ ] Acertar tipagem/DTO de alguns endpoints;
-- [ ] Adicionar Github Action para checagem dos testes à cada novo commit;
+- [x] Adicionar Github Action para checagem dos testes à cada novo commit;
