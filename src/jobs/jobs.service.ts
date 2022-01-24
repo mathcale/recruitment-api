@@ -25,7 +25,7 @@ export class JobsService {
   private readonly logger = new Logger(JobsService.name);
 
   constructor(
-    @InjectRepository(Job) private readonly jobsRepository: JobsRepository,
+    @InjectRepository(JobsRepository) private readonly jobsRepository: JobsRepository,
     private readonly usersService: UsersService,
   ) {}
 
