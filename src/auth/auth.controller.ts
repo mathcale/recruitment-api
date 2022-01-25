@@ -13,8 +13,8 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/signin')
-  public async signIn(@Body() signInInput: SignInInput) {
-    return await this.authService.signIn(signInInput);
+  signIn(@Body() signInInput: SignInInput) {
+    return this.authService.signIn(signInInput);
   }
 
   @Post('/create-account')
@@ -26,7 +26,7 @@ export class AuthController {
 
   @Get('/me')
   @UseGuards(AuthGuard())
-  public async getCurrentUser(@Req() req: any): Promise<Partial<User>> {
+  getCurrentUser(@Req() req: any): Promise<User> {
     return req.user;
   }
 }
